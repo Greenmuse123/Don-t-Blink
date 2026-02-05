@@ -1,0 +1,33 @@
+appId: com.eyesclosedpunisher.app
+productName: Eyes Closed Punisher
+directories:
+  output: release
+  buildResources: assets
+files:
+  - "**/*"
+  - "!**/*.ts"
+  - "!src/**/*"
+  - "!electron/**/*"
+  - "!*.config.ts"
+  - "!*.config.js"
+  - "!vitest.config.*"
+  - "!package-lock.json"
+  - "!README.md"
+  - "!docs/**/*"
+  - "renderer-dist/**/*"
+  - "dist-electron/**/*"
+win:
+  target: nsis
+  icon: assets/icon.ico
+  publisherName: Eyes Closed Punisher Team
+  signAndEditExecutable: false
+  verifyUpdateCodeSignature: false
+mac:
+  target: dmg
+  icon: assets/icon.icns
+  category: public.app-category.entertainment
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/

@@ -1,0 +1,17 @@
+﻿node_modules/
+dist/
+renderer-dist/
+*.log
+.DS_Store
+.env
+.vscode/
+.idea/
+*.tgz
+build/
+coverage/
+
+release/
+dist-electron/
+*.exe
+*.asar
+*.blockmap
