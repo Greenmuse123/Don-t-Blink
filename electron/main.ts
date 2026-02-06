@@ -116,6 +116,7 @@ function createPopupWindow(filePath: string, id: string): BrowserWindow {
   const isImage = /\.(jpg|jpeg|png|gif|bmp|webp|svg|ico)$/i.test(filePath)
   const fileUrl = pathToFileURL(filePath).href
   
+  // Create HTML with error handling and proper loading
   const html = isImage ? `
     <!DOCTYPE html>
     <html>
@@ -123,10 +124,11 @@ function createPopupWindow(filePath: string, id: string): BrowserWindow {
       <style>
         body { margin: 0; overflow: hidden; background: transparent; display: flex; align-items: center; justify-content: center; }
         img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .error { color: white; font-family: sans-serif; padding: 20px; }
       </style>
     </head>
     <body>
-      <img src="${fileUrl}" />
+      <img src="${fileUrl}" onerror="document.body.innerHTML='<div class=\\'error\\'>Failed to load image</div>'" />
     </body>
     </html>
   ` : `
@@ -136,15 +138,17 @@ function createPopupWindow(filePath: string, id: string): BrowserWindow {
       <style>
         body { margin: 0; overflow: hidden; background: transparent; display: flex; align-items: center; justify-content: center; }
         video { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .error { color: white; font-family: sans-serif; padding: 20px; }
       </style>
     </head>
     <body>
-      <video src="${fileUrl}" autoplay loop muted playsinline />
+      <video src="${fileUrl}" autoplay loop muted playsinline onerror="document.body.innerHTML='<div class=\\'error\\'>Failed to load video</div>'" />
     </body>
     </html>
   `
   
-  popup.loadURL(`data:text/html,${encodeURIComponent(html)}`)
+  // Use loadURL with the data URL but with proper base
+  popup.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
   
   // Show window only after content loads to prevent broken image icon
   popup.once('ready-to-show', () => {

@@ -1,8 +1,8 @@
-# Eyes Closed Punisher
+# Don't Blink
 
-> The ultimate productivity tool that keeps you awake - or else.
+> Weeping angels, but make it productivity.
 
-An Electron application that uses AI-powered eye tracking to detect when you close your eyes. If you dare to rest for even a moment, it unleashes a chaotic barrage of popups, videos, images, and audio all over your screen. The only way to stop the madness? **Open your eyes.**
+An Electron application that uses AI-powered eye tracking to detect when you blink or close your eyes. The moment you dare to rest, it unleashes a chaotic barrage of popups, videos, images, and audio all over your screen. The only way to stop the madness? **Don't blink. Open your eyes.**
 
 ![Demo](https://img.shields.io/badge/status-working-brightgreen) ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue) ![License](https://img.shields.io/badge/license-MIT-orange)
 
@@ -37,8 +37,8 @@ An Electron application that uses AI-powered eye tracking to detect when you clo
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/eyes-closed-punisher.git
-cd eyes-closed-punisher
+git clone https://github.com/YOUR_USERNAME/dont-blink.git
+cd dont-blink
 
 # Install dependencies
 npm install
@@ -69,7 +69,7 @@ npm start
 ### Project Structure
 
 ```
-eyes-closed-punisher/
+dont-blink/
 ├── electron/              # Electron main process
 │   ├── main.ts           # Main window & popup management
 │   └── preload.ts        # IPC bridge

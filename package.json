@@ -1,9 +1,9 @@
 {
-  "name": "eyes-closed-punisher",
+  "name": "dont-blink",
   "version": "1.0.0",
-  "description": "Desktop app that plays audio and spawns videos when eyes close",
+  "description": "Desktop app that punishes you for closing your eyes with popups and audio",
   "main": "dist-electron/main.js",
-  "author": "Eyes Closed Punisher Team",
+  "author": "Don't Blink Team",
   "license": "MIT",
   "scripts": {
     "dev": "vite",

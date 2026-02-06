@@ -71,6 +71,7 @@ export function useEyeDetection({
   const isRunning = useRef(false)
   const lastEarUpdate = useRef(0)
   const lastDurationUpdate = useRef(0)
+  const eyeStateRef = useRef(eyeState) // Track current eye state to avoid stale closure
 
   const start = useCallback(async () => {
     try {
@@ -139,7 +140,7 @@ export function useEyeDetection({
               lastEarUpdate.current = timestamp
               setEar(blinkScore)
               setSmoothedEAR(newSmoothed)
-              log('>>> Blink:', blinkScore.toFixed(3), '| smoothed:', newSmoothed.toFixed(3), '| threshold:', threshold, '| eyeState:', eyeState)
+              log('>>> Blink:', blinkScore.toFixed(3), '| smoothed:', newSmoothed.toFixed(3), '| threshold:', threshold, '| eyeState:', eyeStateRef.current)
             }
 
             // Eyes closed if blink score > threshold (0.5 is typical closed threshold)
@@ -152,9 +153,10 @@ export function useEyeDetection({
 
               const requiredClosedFrames = Math.ceil((config.debounceCloseMs / 1000) * DETECTION_FPS)
 
-              if (consecutiveClosedFrames.current >= requiredClosedFrames && eyeState === EyeState.OPEN) {
+              if (consecutiveClosedFrames.current >= requiredClosedFrames && eyeStateRef.current === EyeState.OPEN) {
                 log('>>>>>>>> EYES CLOSED! TRIGGERING CALLBACK <<<<<<<<')
                 setEyeState(EyeState.CLOSED)
+                eyeStateRef.current = EyeState.CLOSED
                 closedStartTime.current = performance.now()
                 onEyesClose?.()
               }
@@ -164,16 +166,17 @@ export function useEyeDetection({
 
               const requiredOpenFrames = Math.ceil((config.debounceOpenMs / 1000) * DETECTION_FPS)
 
-              if (consecutiveOpenFrames.current >= requiredOpenFrames && eyeState === EyeState.CLOSED) {
+              if (consecutiveOpenFrames.current >= requiredOpenFrames && eyeStateRef.current === EyeState.CLOSED) {
                 log('>>>>>>>> EYES OPEN! TRIGGERING CALLBACK <<<<<<<<')
                 setEyeState(EyeState.OPEN)
+                eyeStateRef.current = EyeState.OPEN
                 closedStartTime.current = null
                 await onEyesOpen?.()
               }
             }
 
             // Throttle duration updates
-            if (closedStartTime.current && eyeState === EyeState.CLOSED) {
+            if (closedStartTime.current && eyeStateRef.current === EyeState.CLOSED) {
               if (timestamp - lastDurationUpdate.current > 200) {
                 lastDurationUpdate.current = timestamp
                 setClosedDurationMs(performance.now() - closedStartTime.current)
@@ -188,8 +191,9 @@ export function useEyeDetection({
 
             const requiredOpenFrames = Math.ceil((config.debounceOpenMs / 1000) * DETECTION_FPS)
 
-            if (consecutiveOpenFrames.current >= requiredOpenFrames && eyeState === EyeState.CLOSED) {
+            if (consecutiveOpenFrames.current >= requiredOpenFrames && eyeStateRef.current === EyeState.CLOSED) {
               setEyeState(EyeState.OPEN)
+              eyeStateRef.current = EyeState.OPEN
               closedStartTime.current = null
               await onEyesOpen?.()
               setClosedDurationMs(0)
@@ -211,7 +215,7 @@ export function useEyeDetection({
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [isReady, videoRef, eyeState, threshold, config, onEyesClose, onEyesOpen])
+  }, [isReady, videoRef, threshold, config, onEyesClose, onEyesOpen])
 
   return {
     eyeState,
