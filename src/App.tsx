@@ -115,9 +115,17 @@ export default function App() {
     [setVideoContainer]
   )
 
+  const handleReset = useCallback(() => {
+    onEyesOpen()
+  }, [onEyesOpen])
+
   return (
     <div style={styles.container}>
-      <VideoOverlay onContainerReady={handleContainerReady} />
+      <VideoOverlay 
+        onContainerReady={handleContainerReady}
+        onReset={handleReset}
+        isSpamActive={spamState.isActive}
+      />
       
       <header style={styles.header}>
         <div style={styles.headerContent}>
